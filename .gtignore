@@ -1,0 +1,22 @@
+# Byte-compiled / cache files
+*.py[cod]
+__pycache__/
+*.so
+
+# Virtual environment
+.myvirtualenv4django/
+
+# Django stuff:
+*.log
+db.sqlite3
+/staticfiles/
+/media/
+
+# Secrets
+.env
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
