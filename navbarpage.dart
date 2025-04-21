@@ -3,6 +3,7 @@ import 'dash.dart';
 import 'animals.dart';
 import 'reports-alerts.dart';
 import 'new.dart';
+import 'chat_screen.dart';
 
 class Home extends StatefulWidget{
   @override
@@ -14,7 +15,8 @@ class _HomeState extends State<Home>{
   final List<Widget> _pages =[
     Dashboard(),
     PigsPage(),
-    ActivityGaugePage(),
+    ChatScreen(),
+    //ActivityGaugePage(),
     ReportsAlertsPage()
     // Center(child:Text('Home')),
     // Center(child:Text('Search'))
@@ -44,9 +46,14 @@ class _HomeState extends State<Home>{
                   
                 ),
                   BottomNavigationBarItem(
-                  icon:Icon(Icons.report,color:Colors.blue),
+                  icon:Icon(Icons.analytics,color:Colors.blue),
                   label:'Monitor'
                 ),
+                
+                  BottomNavigationBarItem(
+                  icon:Icon(Icons.message,color:Colors.blue),
+                  label:'Chat'
+                  ),
                 BottomNavigationBarItem(
                   icon:Icon(Icons.report,color:Colors.blue),
                   label:'Reports'
