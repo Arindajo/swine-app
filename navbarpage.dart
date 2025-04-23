@@ -4,6 +4,7 @@ import 'animals.dart';
 import 'reports-alerts.dart';
 import 'new.dart';
 import 'chat_screen.dart';
+import 'reportpage.dart';
 
 class Home extends StatefulWidget{
   @override
@@ -17,7 +18,7 @@ class _HomeState extends State<Home>{
     PigsPage(),
     ChatScreen(),
     //ActivityGaugePage(),
-    ReportsAlertsPage()
+    ReportsScreen()
     // Center(child:Text('Home')),
     // Center(child:Text('Search'))
   ];
