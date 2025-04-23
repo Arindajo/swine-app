@@ -18,7 +18,7 @@ class _HomeState extends State<Home>{
     PigsPage(),
     ChatScreen(),
     //ActivityGaugePage(),
-    ReportsScreen()
+    ReportsPage()
     // Center(child:Text('Home')),
     // Center(child:Text('Search'))
   ];

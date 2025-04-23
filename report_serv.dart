@@ -1,14 +1,18 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'report.dart';
+import 'report.dart'; // your Report model
 
-Future<List<Report>> fetchReports() async {
-  final response = await http.get(Uri.parse("http://<your-server-ip>:8000/api/reports/"));
+class ReportService {
+  static const String baseUrl = 'http://your-ip-or-domain/api/reports/';
 
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body)['reports'];
-    return List<Report>.from(data.map((item) => Report.fromJson(item)));
-  } else {
-    throw Exception("Failed to load reports");
+  static Future<List<Report>> fetchReports() async {
+    final response = await http.get(Uri.parse(baseUrl));
+
+    if (response.statusCode == 200) {
+      final List reportsJson = json.decode(response.body)['reports'];
+      return reportsJson.map((json) => Report.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load reports');
+    }
   }
 }
