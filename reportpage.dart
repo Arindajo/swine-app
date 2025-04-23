@@ -1,15 +1,57 @@
-//FOR DISPLAY
 import 'package:flutter/material.dart';
-import 'report_serv.dart'; // service
-import 'report.dart'; // model
+import 'package:fl_chart/fl_chart.dart';
+import 'report_serv.dart';
+import 'report.dart';
 
 class ReportsPage extends StatelessWidget {
   const ReportsPage({super.key});
 
+  Color _activityColor(String activity) {
+    switch (activity.toLowerCase()) {
+      case 'high activity':
+        return Colors.green;
+      case 'moderate activity':
+        return Colors.orange;
+      case 'low activity':
+      default:
+        return Colors.red;
+    }
+  }
+
+  IconData _activityIcon(String activity) {
+    switch (activity.toLowerCase()) {
+      case 'high activity':
+        return Icons.directions_run;
+      case 'moderate activity':
+        return Icons.directions_walk;
+      case 'low activity':
+      default:
+        return Icons.bedtime;
+    }
+  }
+
+  List<FlSpot> _buildTemperatureData(List<Report> reports) {
+    final spots = <FlSpot>[];
+    for (int i = 0; i < reports.length; i++) {
+      final report = reports[i];
+      try {
+        final tempString = report.content
+            .split('Temperature:')[1]
+            .split(',')[0]
+            .replaceAll(RegExp('[^0-9.]'), '');
+        final temp = double.tryParse(tempString);
+        if (temp != null) {
+          spots.add(FlSpot(i.toDouble(), temp));
+        }
+      } catch (_) {}
+    }
+    return spots;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Reports")),
+      appBar: AppBar(title: const Text("Pig Health Reports")),
       body: FutureBuilder<List<Report>>(
         future: ReportService.fetchReports(),
         builder: (context, snapshot) {
@@ -22,20 +64,88 @@ class ReportsPage extends StatelessWidget {
           }
 
           final reports = snapshot.data!;
+          final temperatureData = _buildTemperatureData(reports);
 
-          return ListView.builder(
-            itemCount: reports.length,
-            itemBuilder: (context, index) {
-              final report = reports[index];
-              return ListTile(
-                title: Text(report.title),
-                subtitle: Text(report.content),
-                trailing: Text(
-                  report.createdAt.toLocal().toString().split('.')[0],
-                  style: const TextStyle(fontSize: 12),
+          return ListView(
+            padding: const EdgeInsets.all(8),
+            children: [
+              const Text(
+                "Temperature Trend",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              SizedBox(
+                height: 200,
+                child: LineChart(
+                  LineChartData(
+                    titlesData: FlTitlesData(show: false),
+                    borderData: FlBorderData(show: false),
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: temperatureData,
+                        isCurved: true,
+                        barWidth: 3,
+                     colors: [Colors.blue],
+
+                        dotData: FlDotData(show: false),
+                      ),
+                    ],
+                  ),
                 ),
-              );
-            },
+              ),
+              const SizedBox(height: 20),
+              ...reports.map((report) {
+                final activity = report.content.contains("Activity Level:")
+                    ? report.content.split("Activity Level:")[1].trim()
+                    : "Unknown";
+
+                final temperature = report.content.contains("Temperature:")
+                    ? report.content.split("Temperature:")[1].split(',')[0].trim()
+                    : "Unknown";
+
+                return Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(16),
+                    leading: CircleAvatar(
+                      backgroundColor: _activityColor(activity),
+                      child: Icon(_activityIcon(activity), color: Colors.white),
+                    ),
+                    title: Text(
+                      report.title,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Icons.thermostat, size: 16),
+                            const SizedBox(width: 4),
+                            Text("Temperature: $temperature °C"),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            const Icon(Icons.insights, size: 16),
+                            const SizedBox(width: 4),
+                            Text("Activity Level: $activity"),
+                          ],
+                        ),
+                      ],
+                    ),
+                    trailing: Text(
+                      report.createdAt.toLocal().toString().split('.')[0],
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                );
+              }).toList()
+            ],
           );
         },
       ),
