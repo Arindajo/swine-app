@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'report.dart'; // your Report model
+import 'report_model.dart';
 
 class ReportService {
-  static const String baseUrl = 'http://your-ip-or-domain/api/reports/';
+  static const String baseUrl = 'http://192.168.43.103:8000/api/reports/'; // Replace with actual
 
   static Future<List<Report>> fetchReports() async {
     final response = await http.get(Uri.parse(baseUrl));
