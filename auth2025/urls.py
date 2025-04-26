@@ -22,5 +22,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth1app/', include('auth1app.urls')),
     path('api/', include('monitor.urls')),
-
+    path('api/animal/', include('animal.urls')),
+    path('api/chat/', include('chatbot.urls')),
+    path('api/', include('report.urls')),
+    path('api/treatments/', include('treatment.urls')),
+    path('api/', include('alerts.urls')),
 ]

@@ -43,7 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'monitor'
+    'monitor',
+    'animal',
+    'chatbot',
+    'report',
+    'treatment',
+    'alerts'
     
   
 ]
