@@ -20,3 +20,22 @@ db.sqlite3
 
 # macOS
 .DS_Store
+# Python
+__pycache__/
+*.py[cod]
+*.log
+
+# Django
+*.sqlite3
+*.env
+
+# Virtualenv
+env/
+venv/
+myvirtualenv4django/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
