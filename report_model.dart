@@ -18,8 +18,18 @@ class Report {
       title: json['title'],
       content: json['content'],
       temperature: (json['temperature'] ?? 0.0).toDouble(),
-      activityLevel: json['activity_level'] ?? 'Unknown',  // Ensure 'activity_level' is correctly mapped
+      activityLevel: json['activity_level'] ?? 'Unknown',
       createdAt: DateTime.parse(json['created_at']),
     );
+  }
+
+  Map<String, dynamic> toJson() {  // 👈 Added this
+    return {
+      'title': title,
+      'content': content,
+      'temperature': temperature,
+      'activityLevel': activityLevel,
+      'createdAt': createdAt.toIso8601String(),
+    };
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'report_serv.dart';
 import 'report_model.dart';
+import 'package:intl/intl.dart';  // You had commented it out, now we need it.
 
 class ReportsPage extends StatelessWidget {
   const ReportsPage({super.key});
@@ -39,6 +40,11 @@ class ReportsPage extends StatelessWidget {
     return spots;
   }
 
+  String _formatDate(DateTime date) {
+    final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+    return formatter.format(date);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +61,12 @@ class ReportsPage extends StatelessWidget {
           }
 
           final reports = snapshot.data!;
+
+          // 🔥 Print the fetched reports to debug what you're getting
+          for (var report in reports) {
+            print(report.toJson()); // (you also need to add toJson() method in Report model)
+          }
+
           final temperatureData = _buildTemperatureData(reports);
 
           return ListView(
@@ -75,7 +87,7 @@ class ReportsPage extends StatelessWidget {
                         spots: temperatureData,
                         isCurved: true,
                         barWidth: 3,
-                        color:Colors.blue,
+                        color: Colors.blue,
                         dotData: FlDotData(show: false),
                       ),
                     ],
@@ -124,7 +136,7 @@ class ReportsPage extends StatelessWidget {
                       ],
                     ),
                     trailing: Text(
-                      report.createdAt.toLocal().toString().split('.')[0],
+                      _formatDate(report.createdAt.toLocal()),  // Local formatted date
                       style: const TextStyle(fontSize: 12),
                     ),
                   ),
