@@ -6,19 +6,32 @@ class ReportService {
   static const String baseUrl = 'http://192.168.43.103:8000/api/reports/'; // Replace with actual API URL
 
   static Future<List<Report>> fetchReports() async {
-    final response = await http.get(Uri.parse(baseUrl));
+    try {
+      final response = await http.get(Uri.parse(baseUrl));
 
-    if (response.statusCode == 200) {
-      // Decode the response body into a Map
-      final Map<String, dynamic> data = json.decode(response.body);
+       print('Response Body: ${response.body}');
 
-      // Assuming the reports are inside a 'results' key (adjust as needed)
-      final List reportsJson = data['results'];  // Change this if the key is different in your API
 
-      // Map the JSON data to a list of Report objects
-      return reportsJson.map((json) => Report.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load reports');
+      if (response.statusCode == 200) {
+        // Decode the response body into a Map
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        // Ensure the 'results' key exists and is not null
+        if (data['results'] != null && data['results'] is List) {
+          final List reportsJson = data['results'];
+
+          // Map the JSON data to a list of Report objects
+          return reportsJson.map((json) => Report.fromJson(json)).toList();
+        } else {
+          // Return an empty list if 'results' is null or not a list
+          return [];
+        }
+      } else {
+        throw Exception('Failed to load reports: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching reports: $e');
+      return []; // Return an empty list if an error occurs
     }
   }
 }

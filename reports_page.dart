@@ -120,8 +120,7 @@ class ReportsPage extends StatelessWidget {
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            const Icon(Icons.thermostat, size: 16),
-                            const SizedBox(width: 4),
+                            const Icon(Icons.thermostat, size: 16),const SizedBox(width: 4),
                             Text("Temperature: $temperature °C"),
                           ],
                         ),
